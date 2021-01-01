@@ -4,17 +4,25 @@ import {
   TouchableHighlightBase,
   TouchableWithoutFeedback,
   View,
+  LayoutAnimation,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {CardSection} from './common';
 import * as actions from '../actions';
 
 class ListItem extends Component {
+  componentDidMount() {
+    LayoutAnimation.spring();
+  }
+
   renderDescription() {
     const {library, expanded} = this.props;
 
     if (expanded) {
-      return <Text>{library.description}</Text>;
+      return;
+      <CardSection>
+        <Text style={{flex: 1}}>{library.description}</Text>
+      </CardSection>;
     }
   }
 
@@ -23,7 +31,7 @@ class ListItem extends Component {
     const {id, title} = this.props.library;
 
     return (
-      <TouchableWithoutFeedback onPress={() => this.selectLibrary(id)}>
+      <TouchableWithoutFeedback onPress={() => this.props.selectLibrary(id)}>
         <View>
           <CardSection>
             <Text style={titleStyle}>{title}</Text>
@@ -42,10 +50,10 @@ const styles = {
   },
 };
 
-const mapStateProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps) => {
   const expanded = state.selectedLibraryId === ownProps.library.id;
 
   return {expanded};
 };
 
-export default connect(mapStateProps, actions)(ListItem);
+export default connect(mapStateToProps, actions)(ListItem);
